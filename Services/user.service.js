@@ -50,42 +50,37 @@ async function addNewUser(data) {
 async function validation(data) {
     let errors = []
     if (!data.firstName) errors.push("firstName")
-    if (!data.lastName) errors.push("latstName")
+    if (!data.lastName) errors.push("lastName")
     if (!data.email) errors.push("email")
 
     return errors
 }
 
 
+async function updateUser(userId, data) {
+ 
+    // userId exists
+    const userExist = await userController.readOne({ _id: userId })
+    if (!userExist) throw "User is not exist"
 
+    // map to my object by model
+    let userToUpdate = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+    }
+    if(data.license){
+        userToUpdate.license=[...userExist.license, ...data.license]
+    }
 
-function updateUser(user) {
-    // user.email 
-    // user is not exist >> by email
-
-    // valid : fName, lName ,DOB
-
-    // generate ID :
-    // Option 1
-    // Option 1
-    //  id maximum >> higher
-    //  + 1
-
-    // Option 2
-    // id by algorithem
-    let id = generateId()
-    // user.id = genId
-
-    // push user to data
-
-    // return user / user.id 
+    await userController.update({ _id: userId },userToUpdate)
+    return await userController.readOne({ _id: userId })
 }
 
 function generateId() {
     return Date.now().toString().substring(2, 8)
 }
 
-module.exports = { getAllUser, getUser, addNewUser }
+module.exports = { getAllUser, getUser, addNewUser ,updateUser}
 
 
 

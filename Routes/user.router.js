@@ -51,5 +51,14 @@ router.post('/', async (req,res)=>{
         res.status(400).send(err)
     }
 })
+router.put('/:userId', async (req,res)=>{
+    try{
+        const updatedUser = await userService.updateUser(req.params.userId, req.body)
+        res.send(updatedUser)
+    }
+    catch(err){
+        res.status(400).send(err)
+    }
+})
 
 module.exports = router
